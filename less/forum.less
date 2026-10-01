@@ -48,11 +48,20 @@
  * place.
  *
  * 🚨 The cap is on HEIGHT and the mark is wide, so every pixel here costs
- * roughly three and a half of width. 56px was measured against 44px and 64px:
- * 44 and 56 behave identically — both keep all five links down to 980px and
- * both lose two at 900px, which is the layout's own breakpoint and nothing to
- * do with the logo. 64px is where it starts costing, dropping a third link at
- * 900px. So 56 is free and 64 is not.
+ * roughly three and a half of width.
+ *
+ * Measured on fbsfb, which carries NINE header links — not on the demo, which
+ * has five and showed 56px costing nothing at all. The real numbers, links
+ * visible in the bar:
+ *
+ *            1280   1100   1024    980    900
+ *     44px      6      5      4      4      3
+ *     56px      6      5      4      3      3
+ *     64px      5      4      4      3      2
+ *
+ * So 56px costs one link in a narrow band around 980px and nothing anywhere
+ * else, which is worth 27% more logo. 64px costs one at 1280 and 1100 — the
+ * widths most people are actually on — and is not worth it.
  */
 .App-header .Header-logo {
   max-height: 56px;
