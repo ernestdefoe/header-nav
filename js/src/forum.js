@@ -1,6 +1,6 @@
 import app from 'flarum/forum/app';
 import { extend } from 'flarum/common/extend';
-import HeaderNav from './components/HeaderNav';
+import HeaderNav from './forum/components/HeaderNav';
 
 app.initializers.add('ernestdefoe-header-nav', () => {
   /*
