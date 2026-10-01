@@ -1,0 +1,13 @@
+ernestdefoe-header-nav:
+  forum:
+    label: "Forum navigation"
+    more: "More"
+    discussions: "Discussions"
+    picks: "Pick'em"
+    fantasy: "Fantasy"
+    roster: "Teams"
+    articles: "Articles"
+    gallery: "Gallery"
+    badges: "Badges"
+    tags: "Tags"
+    hashtags: "Hashtags"

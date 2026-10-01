@@ -1,0 +1,84 @@
+// ── The forum's navigation, in the header ──────────────────────────────────
+
+.HeaderNav {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  margin-left: 18px;
+}
+
+.HeaderNav-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 7px 12px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.92rem;
+  line-height: 1.2;
+  white-space: nowrap;
+  color: var(--header-color, @header-color);
+
+  &:hover,
+  &:focus {
+    background: fade(#000, 6%);
+    color: var(--header-color, @header-color);
+    text-decoration: none;
+  }
+
+  // 🚨 The current page is marked by weight and an underline, not by colour
+  // alone — the header sits on white here and on dark in dark mode, and a
+  // colour that reads as "active" against one is invisible against the other.
+  &.active {
+    box-shadow: inset 0 -2px 0 currentColor;
+  }
+}
+
+.HeaderNav-icon {
+  font-size: 0.95em;
+  opacity: 0.75;
+}
+
+// The dropdown's own menu should look like the rest of the header, not like a
+// second nav.
+.HeaderNav-more .Dropdown-menu .HeaderNav-link {
+  display: flex;
+  width: 100%;
+  border-radius: 0;
+  padding: 8px 14px;
+}
+
+/*
+ * 🚨 The pill row is hidden by ITEM, not by hiding the nav.
+ *
+ * The same container also holds the conference tags, which are the forum's
+ * structure and have to stay. Hiding .item-nav outright takes SEC, ACC, the
+ * Big Ten and the rest with it.
+ */
+@media (min-width: 768px) {
+  .IndexPage-nav .item-allDiscussions,
+  .IndexPage-nav .item-picks,
+  .IndexPage-nav .item-fantasy,
+  .IndexPage-nav .item-roster,
+  .IndexPage-nav .item-badges,
+  .IndexPage-nav .item-tags,
+  .IndexPage-nav .item-hashtags,
+  .IndexPage-nav .item-atrium,
+  .IndexPage-nav .item-pagebuilder-articles {
+    display: none;
+  }
+}
+
+/*
+ * 🚨 On a phone the header nav goes, and the pill row comes back.
+ *
+ * The header has room for a logo and two controls at 375px and nothing else.
+ * Hiding the nav without restoring the original would leave no way to reach
+ * the pick'em at all — the rule above is deliberately desktop-only so the
+ * fallback needs no second rule to undo it.
+ */
+@media (max-width: 767px) {
+  .HeaderNav {
+    display: none;
+  }
+}

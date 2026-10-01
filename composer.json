@@ -1,0 +1,30 @@
+{
+    "name": "ernestdefoe/header-nav",
+    "description": "Move the forum's navigation into the header, grouped, instead of a pill row above the discussion list.",
+    "type": "flarum-extension",
+    "license": "MIT",
+    "require": {
+        "php": "^8.3",
+        "flarum/core": "^2.0"
+    },
+    "authors": [
+        {
+            "name": "ernestdefoe",
+            "email": "ernestdefoe@gmail.com"
+        }
+    ],
+    "extra": {
+        "flarum-extension": {
+            "title": "Header Nav",
+            "category": "theme",
+            "icon": {
+                "name": "fa-solid fa-bars",
+                "backgroundColor": "#B22222",
+                "color": "#fff"
+            }
+        }
+    },
+    "config": {
+        "sort-packages": true
+    }
+}
