@@ -1,34 +1,22 @@
 // ── The forum's navigation, in the header ──────────────────────────────────
+//
+// 🚨 There is no nav container. Each link is its own item in HeaderPrimary, so
+// Flarum's OverflowingList shows what fits and puts the rest in its "..." menu
+// as ordinary labelled rows. A single wrapper collapsed as one blob.
 
-.HeaderNav {
-  display: flex;
-  align-items: center;
-  gap: 2px;
-  margin-left: 18px;
-}
-
-.HeaderNav-link {
+.Header-controls .HeaderNav-link {
   display: inline-flex;
   align-items: center;
   gap: 7px;
-  padding: 7px 12px;
+  padding: 7px 11px;
   border-radius: 8px;
   font-weight: 600;
   font-size: 0.92rem;
   line-height: 1.2;
   white-space: nowrap;
-  /*
-   * 🚨 `inherit`, not a LESS variable.
-   *
-   * @header-color does not exist in Flarum 2 — I invented it, exactly as I had
-   * invented @control-bg an hour earlier. An undefined variable in an
-   * extension's LESS is FATAL: the recompile throws Less_Exception_Compiler and
-   * every page on the site returns 500.
-   *
-   * Inheriting is also simply correct here. The header sets its own colour and
-   * this nav sits inside it, so the rule works on a light header and a dark one
-   * without naming either.
-   */
+  // Inherits so the rule works on a light header and a dark one without naming
+  // either. @header-color is not a Flarum variable — inventing one is fatal:
+  // an undefined variable in an extension's LESS 500s every page.
   color: inherit;
 
   &:hover,
@@ -37,13 +25,6 @@
     color: inherit;
     text-decoration: none;
   }
-
-  // 🚨 The current page is marked by weight and an underline, not by colour
-  // alone — the header sits on white here and on dark in dark mode, and a
-  // colour that reads as "active" against one is invisible against the other.
-  &.active {
-    box-shadow: inset 0 -2px 0 currentColor;
-  }
 }
 
 .HeaderNav-icon {
@@ -51,13 +32,23 @@
   opacity: 0.75;
 }
 
-// The dropdown's own menu should look like the rest of the header, not like a
-// second nav.
-.HeaderNav-more .Dropdown-menu .HeaderNav-link {
+// In the overflow menu the links are rows, not pills.
+.Header-controls .Dropdown-menu .HeaderNav-link {
   display: flex;
   width: 100%;
   border-radius: 0;
-  padding: 8px 14px;
+  padding: 9px 15px;
+}
+
+/*
+ * 🚨 The logo is capped so the nav has room.
+ *
+ * At its natural size it rendered 406px wide and ate the space the navigation
+ * needs — which is why everything was overflowing into the menu in the first
+ * place. 44px tall puts it near 300px and still reads clearly.
+ */
+.App-header .Header-logo {
+  max-height: 44px;
 }
 
 /*
@@ -83,15 +74,14 @@
 }
 
 /*
- * 🚨 On a phone the header nav goes, and the pill row comes back.
+ * 🚨 On a phone the header links go and the pill row comes back.
  *
  * The header has room for a logo and two controls at 375px and nothing else.
- * Hiding the nav without restoring the original would leave no way to reach
- * the pick'em at all — the rule above is deliberately desktop-only so the
- * fallback needs no second rule to undo it.
+ * Flarum moves these into its drawer anyway, so hiding them here only stops
+ * them competing for a few pixels they were never going to win.
  */
 @media (max-width: 767px) {
-  .HeaderNav {
+  .Header-controls .HeaderNav-link {
     display: none;
   }
 }

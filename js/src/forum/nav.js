@@ -28,4 +28,11 @@ export const MORE = [
   { key: 'hashtags', href: '/hashtags', icon: 'fas fa-hashtag', label: 'ernestdefoe-header-nav.forum.hashtags', item: 'item-hashtags' },
 ];
 
+/**
+ * The order is the organisation.
+ *
+ * HeaderPrimary's OverflowingList drops from the END when space runs out, so
+ * the four things people come here for sit first and are the last to go into
+ * the overflow menu.
+ */
 export const ALL = [...PRIMARY, ...MORE];
