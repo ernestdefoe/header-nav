@@ -85,7 +85,21 @@
    * so it will always win that row; giving it the row outright is what stops
    * it taking the menu with it.
    */
+  /*
+   * 🚨 `width: 100%` alone does NOT do it. The title is a flex ITEM with the
+   * default `flex-shrink: 1`, so a 100% width is simply shrunk back to 165px to
+   * make room for the controls beside it — measured: the rule was in the served
+   * CSS, inside the right media query, and the computed width was still 165.
+   *
+   * The parent has to be allowed to wrap, and the title has to refuse to
+   * shrink. Both, or neither works.
+   */
+  .App-drawer .App-header > .container {
+    flex-wrap: wrap;
+  }
+
   .App-drawer .Header-title {
+    flex: 0 0 100%;
     width: 100%;
   }
 
