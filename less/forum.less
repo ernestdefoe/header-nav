@@ -61,22 +61,23 @@
 }
 
 /*
- * 🚨 The pill row is hidden by ITEM, not by hiding the nav.
+ * 🚨 The visible pill row is BESPOKE's, not Flarum's.
  *
- * The same container also holds the conference tags, which are the forum's
- * structure and have to stay. Hiding .item-nav outright takes SEC, ACC, the
- * Big Ten and the rest with it.
+ * Flarum's own `.IndexPage-nav` measures 0x0 on this forum — the theme renders
+ * its own `.BespokeHeaderNav` instead. Hiding Flarum's nav therefore hid
+ * something nobody could see, while the real row carried on.
+ *
+ * Only the pills go. The same container also holds "Start a Discussion", which
+ * is the primary control on the page and has nothing to do with navigation.
  */
 @media (min-width: 768px) {
-  .IndexPage-nav .item-allDiscussions,
-  .IndexPage-nav .item-picks,
-  .IndexPage-nav .item-fantasy,
-  .IndexPage-nav .item-roster,
-  .IndexPage-nav .item-badges,
-  .IndexPage-nav .item-tags,
-  .IndexPage-nav .item-hashtags,
-  .IndexPage-nav .item-atrium,
-  .IndexPage-nav .item-pagebuilder-articles {
+  // 🚨 Two classes, to beat Bespoke's own `.BespokeHeaderNav-pills{display:flex}`.
+  //
+  // Extension stylesheets are concatenated and Bespoke's lands AFTER this one,
+  // so at equal specificity its rule simply wins. A media query carries no
+  // extra priority — source order decides, which is the same thing that caught
+  // me on a grid-width rule earlier today.
+  .BespokeHeaderNav > .BespokeHeaderNav-pills {
     display: none;
   }
 }
