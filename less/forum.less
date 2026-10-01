@@ -17,12 +17,24 @@
   font-size: 0.92rem;
   line-height: 1.2;
   white-space: nowrap;
-  color: var(--header-color, @header-color);
+  /*
+   * 🚨 `inherit`, not a LESS variable.
+   *
+   * @header-color does not exist in Flarum 2 — I invented it, exactly as I had
+   * invented @control-bg an hour earlier. An undefined variable in an
+   * extension's LESS is FATAL: the recompile throws Less_Exception_Compiler and
+   * every page on the site returns 500.
+   *
+   * Inheriting is also simply correct here. The header sets its own colour and
+   * this nav sits inside it, so the rule works on a light header and a dark one
+   * without naming either.
+   */
+  color: inherit;
 
   &:hover,
   &:focus {
     background: fade(#000, 6%);
-    color: var(--header-color, @header-color);
+    color: inherit;
     text-decoration: none;
   }
 
