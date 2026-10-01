@@ -68,11 +68,29 @@
 }
 
 /*
- * 🚨 Smaller on a phone, where the header is a third of the width and the logo
- * is competing with the drawer button and the search icon rather than with the
- * nav.
+ * 🚨 767.98px, NOT 767px — Flarum's own mobile layout switches at the fraction.
+ *
+ * A rule at 767px leaves a 0.98px band where the drawer is in use and these
+ * overrides are not, and fractional viewport widths are routine on Android and
+ * with browser zoom. It reads as an intermittent glitch. This exact gap has
+ * caused this exact bug before, on another site.
  */
-@media (max-width: 767px) {
+@media (max-width: 767.98px) {
+  /*
+   * 🚨 The logo's row takes the full drawer, so the controls wrap BELOW it.
+   *
+   * Measured at 390px: the drawer is 270px, the title block 165px, and the
+   * search, preferences, sign-up and log-in items were laid out beside it —
+   * running off the edge, with "System preference" clipped. The mark is wide,
+   * so it will always win that row; giving it the row outright is what stops
+   * it taking the menu with it.
+   */
+  .App-drawer .Header-title {
+    width: 100%;
+  }
+
+  // Smaller too: on a phone the logo competes with the drawer button and the
+  // search icon rather than with the nav.
   .App-header .Header-logo {
     max-height: 40px;
   }
