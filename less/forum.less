@@ -45,10 +45,28 @@
  *
  * At its natural size it rendered 406px wide and ate the space the navigation
  * needs — which is why everything was overflowing into the menu in the first
- * place. 44px tall puts it near 300px and still reads clearly.
+ * place.
+ *
+ * 🚨 The cap is on HEIGHT and the mark is wide, so every pixel here costs
+ * roughly three and a half of width. 56px was measured against 44px and 64px:
+ * 44 and 56 behave identically — both keep all five links down to 980px and
+ * both lose two at 900px, which is the layout's own breakpoint and nothing to
+ * do with the logo. 64px is where it starts costing, dropping a third link at
+ * 900px. So 56 is free and 64 is not.
  */
 .App-header .Header-logo {
-  max-height: 44px;
+  max-height: 56px;
+}
+
+/*
+ * 🚨 Smaller on a phone, where the header is a third of the width and the logo
+ * is competing with the drawer button and the search icon rather than with the
+ * nav.
+ */
+@media (max-width: 767px) {
+  .App-header .Header-logo {
+    max-height: 40px;
+  }
 }
 
 /*
