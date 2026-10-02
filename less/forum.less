@@ -49,7 +49,24 @@
       display: none;
     }
 
-    .HeaderNav-icon {
+    /*
+ * 🚨 The colour again, at a weight a theme's header-link rule cannot beat.
+ *
+ * Bespoke ships `:root:not([data-theme^="dark"]) .App-header a { color:
+ * inherit }` — three classes and an element — so in light mode it outranked
+ * the rule above and the links went back to near-black on ernestdefoe.online's
+ * dark header. Four classes settles it in every ordering; `!important` would
+ * also beat the site's own custom CSS, which should keep the last word.
+ */
+.App .App-header .Header-controls .HeaderNav-link {
+  &,
+  &:hover,
+  &:focus {
+    color: var(--header-control-color);
+  }
+}
+
+.HeaderNav-icon {
       opacity: 1;
       font-size: 1.05em;
     }
