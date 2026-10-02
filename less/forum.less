@@ -33,23 +33,6 @@
 }
 
 /*
- * 🚨 Icons only on a narrow desktop, so the links that matter stay on the row.
- *
- * Between the drawer and about 1100px the logo and the account controls leave
- * room for one labelled link; on ernestdefoe.online at 900px only Discussions
- * survived, and the knowledge base and tracker are what that forum is for.
- * Without labels the first links fit as icons, each carrying its name as a
- * title and an aria-label. The More menu keeps its labels: it has the room.
- */
-@media (min-width: 768px) and (max-width: 1099.98px) {
-  .Header-controls > li > .HeaderNav-link {
-    padding: 7px 9px;
-
-    .HeaderNav-label {
-      display: none;
-    }
-
-    /*
  * 🚨 The colour again, at a weight a theme's header-link rule cannot beat.
  *
  * Bespoke ships `:root:not([data-theme^="dark"]) .App-header a { color:
@@ -66,7 +49,24 @@
   }
 }
 
-.HeaderNav-icon {
+/*
+ * 🚨 Icons only on a narrow desktop, so the links that matter stay on the row.
+ *
+ * Between the drawer and about 1100px the logo and the account controls leave
+ * room for one labelled link; on ernestdefoe.online at 900px only Discussions
+ * survived, and the knowledge base and tracker are what that forum is for.
+ * Without labels the first links fit as icons, each carrying its name as a
+ * title and an aria-label. The More menu keeps its labels: it has the room.
+ */
+@media (min-width: 768px) and (max-width: 1099.98px) {
+  .Header-controls > li > .HeaderNav-link {
+    padding: 7px 9px;
+
+    .HeaderNav-label {
+      display: none;
+    }
+
+    .HeaderNav-icon {
       opacity: 1;
       font-size: 1.05em;
     }
