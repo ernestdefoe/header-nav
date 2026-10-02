@@ -21,9 +21,11 @@ export const PRIMARY = [
 ];
 
 export const MORE = [
-  { key: 'articles', href: '/c/articles', icon: 'fas fa-newspaper', label: 'ernestdefoe-header-nav.forum.articles', item: 'item-pagebuilder-articles' },
+  // A support forum's knowledge base and tracker are what people come for, so
+  // they lead the second group and stay on the row ahead of Articles.
   { key: 'kb', href: '/kb', icon: 'fas fa-book', label: 'ernestdefoe-header-nav.forum.kb', item: 'item-knowledge-base' },
   { key: 'issues', href: '/issues', icon: 'fas fa-bug', label: 'ernestdefoe-header-nav.forum.issues', item: 'item-bugtracker' },
+  { key: 'articles', href: '/c/articles', icon: 'fas fa-newspaper', label: 'ernestdefoe-header-nav.forum.articles', item: 'item-pagebuilder-articles' },
   { key: 'gallery', href: '/gallery', icon: 'fas fa-images', label: 'ernestdefoe-header-nav.forum.gallery', item: 'item-atrium' },
   { key: 'badges', href: '/badges', icon: 'fas fa-award', label: 'ernestdefoe-header-nav.forum.badges', item: 'item-badges' },
   { key: 'tags', href: '/tags', icon: 'fas fa-th-large', label: 'ernestdefoe-header-nav.forum.tags', item: 'item-tags' },
@@ -38,3 +40,6 @@ export const MORE = [
  * the overflow menu.
  */
 export const ALL = [...PRIMARY, ...MORE];
+
+/** How many links stay on the row before the rest go behind core's "More" menu. */
+export const DIRECT = 4;
