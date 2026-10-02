@@ -14,16 +14,45 @@
   font-size: 0.92rem;
   line-height: 1.2;
   white-space: nowrap;
-  // Inherits so the rule works on a light header and a dark one without naming
-  // either. @header-color is not a Flarum variable — inventing one is fatal:
-  // an undefined variable in an extension's LESS 500s every page.
-  color: inherit;
+  // 🚨 The header's own control colour, the CSS custom property Sign Up and
+  // Log In use, never `inherit`. A theme can paint the header dark without
+  // changing the text colour inside it; on ernestdefoe.online that drew these
+  // near-black on near-black while the buttons beside them stayed readable.
+  // (A LESS variable would be worse: @header-color does not exist, and an
+  // undefined variable in an extension's LESS 500s every page.)
+  color: var(--header-control-color);
 
   &:hover,
   &:focus {
-    background: fade(#000, 6%);
-    color: inherit;
+    // From the text colour, so the hover shows on a dark header as well.
+    // Escaped so LESS passes it through rather than trying to evaluate it.
+    background: ~"color-mix(in srgb, currentColor 12%, transparent)";
+    color: var(--header-control-color);
     text-decoration: none;
+  }
+}
+
+/*
+ * 🚨 Icons only on a narrow desktop, so the links that matter stay on the row.
+ *
+ * Between the drawer and about 1100px the logo and the account controls leave
+ * room for one labelled link; on ernestdefoe.online at 900px only Discussions
+ * survived, and the knowledge base and tracker are what that forum is for.
+ * Without labels the first links fit as icons, each carrying its name as a
+ * title and an aria-label. The More menu keeps its labels: it has the room.
+ */
+@media (min-width: 768px) and (max-width: 1099.98px) {
+  .Header-controls > li > .HeaderNav-link {
+    padding: 7px 9px;
+
+    .HeaderNav-label {
+      display: none;
+    }
+
+    .HeaderNav-icon {
+      opacity: 1;
+      font-size: 1.05em;
+    }
   }
 }
 

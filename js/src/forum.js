@@ -104,7 +104,12 @@ app.initializers.add('ernestdefoe-header-nav', () => {
 
       items.add(
         `ernestdefoe-header-nav-${entry.key}`,
-        <Link href={href} className="HeaderNav-link">
+        <Link
+          href={href}
+          className="HeaderNav-link"
+          title={app.translator.trans(entry.label, {}, true)}
+          aria-label={app.translator.trans(entry.label, {}, true)}
+        >
           <Icon name={entry.icon} className="HeaderNav-icon" />
           <span className="HeaderNav-label">{app.translator.trans(entry.label)}</span>
         </Link>,
