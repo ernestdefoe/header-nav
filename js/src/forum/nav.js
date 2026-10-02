@@ -22,10 +22,13 @@ export const PRIMARY = [
 
 export const MORE = [
   { key: 'articles', href: '/c/articles', icon: 'fas fa-newspaper', label: 'ernestdefoe-header-nav.forum.articles', item: 'item-pagebuilder-articles' },
+  { key: 'kb', href: '/kb', icon: 'fas fa-book', label: 'ernestdefoe-header-nav.forum.kb', item: 'item-knowledge-base' },
+  { key: 'issues', href: '/issues', icon: 'fas fa-bug', label: 'ernestdefoe-header-nav.forum.issues', item: 'item-bugtracker' },
   { key: 'gallery', href: '/gallery', icon: 'fas fa-images', label: 'ernestdefoe-header-nav.forum.gallery', item: 'item-atrium' },
   { key: 'badges', href: '/badges', icon: 'fas fa-award', label: 'ernestdefoe-header-nav.forum.badges', item: 'item-badges' },
   { key: 'tags', href: '/tags', icon: 'fas fa-th-large', label: 'ernestdefoe-header-nav.forum.tags', item: 'item-tags' },
   { key: 'hashtags', href: '/hashtags', icon: 'fas fa-hashtag', label: 'ernestdefoe-header-nav.forum.hashtags', item: 'item-hashtags' },
+  { key: 'servers', href: '/garrison', icon: 'fas fa-server', label: 'ernestdefoe-header-nav.forum.servers', item: 'item-garrison' },
 ];
 
 /**
