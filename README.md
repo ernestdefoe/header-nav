@@ -6,6 +6,8 @@ Flarum 2. Works with the default theme and with themes that draw the menu as
 pills or tiles (Bespoke, GridIron Nation and others), because it changes the
 menu itself rather than any one theme's markup.
 
+![Header links on a forum: Discussions, Teams, Articles, a Discord link and Tags, with More for the rest](screenshots/header.png)
+
 ## What you can do
 
 Open **Admin → Header Nav → Open the navigation editor**. The editor opens on
@@ -21,6 +23,8 @@ knowledge base, a gallery…). For each one:
 - **Change its icon.** Any Font Awesome class, such as `fas fa-home`.
 - **Drag it into order.** The order applies to the header and to the menu.
 
+![The navigation editor: every menu entry with its name, icon and Header / Menu / Hidden choice, a custom Discord link, and the header-row and logo settings](screenshots/editor.png)
+
 You can also **add your own links** — a privacy notice, your main site, a
 Discord — to the header or the menu, opening in the same tab or a new one.
 
@@ -28,6 +32,8 @@ And choose **how many links sit on the header row** before the rest go behind
 **More**. A narrow window shows fewer; on a phone they are all in the drawer.
 
 Changes show in the header as soon as you save.
+
+<img src="screenshots/phone-drawer.png" alt="On a phone, the header links are rows in the drawer" width="390">
 
 ## Good to know
 
