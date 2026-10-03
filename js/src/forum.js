@@ -3,31 +3,12 @@ import { extend, override } from 'flarum/common/extend';
 import OverflowingList from 'flarum/common/components/OverflowingList';
 import Link from 'flarum/common/components/Link';
 import Icon from 'flarum/common/components/Icon';
-import { ALL, DIRECT } from './forum/nav';
-
-/**
- * What Flarum's own nav is offering, and where each entry points.
- *
- * 🚨 Both existence and destination come from there, not from this file.
- *
- * These routes belong to other extensions, any of which can be disabled — a
- * hardcoded link to /gallery on a forum without the gallery is a nav item that
- * only ever 404s. And "All Discussions" is /all on one forum and / on another
- * depending on the default route, so the href cannot be assumed either.
- */
-function offered() {
-  const nav = document.querySelector('.IndexPage-nav .item-nav');
-  if (!nav) return null; // Not on a page with the nav — show everything.
-
-  const found = new Map();
-  nav.querySelectorAll('li[class*="item-"]').forEach((li) => {
-    const a = li.querySelector('a');
-    li.classList.forEach((c) => {
-      if (c.startsWith('item-')) found.set(c, a ? a.getAttribute('href') : null);
-    });
-  });
-  return found.size ? found : null;
-}
+import LinkButton from 'flarum/common/components/LinkButton';
+import IndexSidebar from 'flarum/forum/components/IndexSidebar';
+import { readNav, isReading } from './forum/nav';
+import { current, safeHref } from './forum/config';
+import HeaderNavEditor from './forum/components/HeaderNavEditor';
+import { applyLogo } from './forum/logo';
 
 app.initializers.add('ernestdefoe-header-nav', () => {
   /*
@@ -74,7 +55,10 @@ app.initializers.add('ernestdefoe-header-nav', () => {
   override(OverflowingList.prototype, 'availableWidth', function (original, list) {
     const free = original(list);
 
-    if (!list.closest('#header-primary') || this.itemWidths.length <= DIRECT) return free;
+    const DIRECT = current().direct;
+
+    // In the phone drawer the links are a list with room for all of them.
+    if (!list.closest('#header-primary') || list.closest('.App-drawer') && window.innerWidth < 768 || this.itemWidths.length <= DIRECT) return free;
 
     const direct = this.itemWidths.slice(0, DIRECT).reduce((sum, width) => sum + width, 0);
 
@@ -90,31 +74,119 @@ app.initializers.add('ernestdefoe-header-nav', () => {
    * every link crammed into it and nothing to tell you what it was.
    *
    * One item per link lets that list do exactly what it is for: show what fits,
-   * in priority order, and put the rest in the menu as ordinary labelled rows.
-   * The priorities are the organisation — discussions, the pick'em, fantasy and
-   * the rosters are what people come for, so they are the last to go.
+   * in the forum's chosen order, and put the rest in the menu as ordinary
+   * labelled rows.
    */
   extend('flarum/forum/components/HeaderPrimary', 'items', function (items) {
-    const have = offered();
+    // 🚨 Here, not in the initializer: initializers run before the forum's
+    // data is loaded, so `app.forum` does not exist yet there. The header is
+    // drawn after it does, on every page; writing the same rule twice is a
+    // no-op.
+    applyLogo();
 
-    ALL.forEach((entry, i) => {
-      if (have && !have.has(entry.item)) return;
+    const cfg = current();
+    const offered = new Map(readNav().map((n) => [n.key, n]));
 
-      const href = (have && have.get(entry.item)) || entry.href;
+    cfg.items
+      .filter((it) => it.place === 'header')
+      .forEach((it, i) => {
+        let href, icon, label, external;
 
-      items.add(
-        `ernestdefoe-header-nav-${entry.key}`,
-        <Link
-          href={href}
-          className="HeaderNav-link"
-          title={app.translator.trans(entry.label, {}, true)}
-          aria-label={app.translator.trans(entry.label, {}, true)}
-        >
-          <Icon name={entry.icon} className="HeaderNav-icon" />
-          <span className="HeaderNav-label">{app.translator.trans(entry.label)}</span>
-        </Link>,
-        100 - i
-      );
-    });
+        if (it.custom) {
+          href = safeHref(it.href);
+          if (!href || !it.label) return;
+          icon = it.icon || 'fas fa-link';
+          label = it.label;
+          external = !href.startsWith('/');
+        } else {
+          const n = offered.get(it.key);
+          // Its extension is not enabled here, or it is a button, not a link.
+          if (!n || !n.link) return;
+          href = n.href;
+          icon = it.icon || n.icon;
+          label = it.label || n.label;
+        }
+
+        items.add(
+          `ernestdefoe-header-nav-${it.key}`,
+          <Link
+            href={href}
+            external={external}
+            target={it.custom && it.newTab ? '_blank' : undefined}
+            rel={it.custom && it.newTab ? 'noopener noreferrer' : undefined}
+            className="HeaderNav-link"
+            title={label}
+            aria-label={label}
+          >
+            {icon ? <Icon name={icon} className="HeaderNav-icon" /> : null}
+            <span className="HeaderNav-label">{label}</span>
+          </Link>,
+          100 - i
+        );
+      });
   });
+
+  app.routes['ernestdefoe-header-nav.editor'] = { path: '/header-nav', component: HeaderNavEditor };
 });
+
+/*
+ * 🚨 The sidebar is adjusted LAST.
+ *
+ * Extensions initialise in alphabetical order, so at the default priority this
+ * would run before flarum/tags, the pick'em and the rest had added their
+ * entries — and could neither move nor rename them. A low initializer priority
+ * puts this extend at the end of the navItems chain, after all of them.
+ *
+ * Whatever is in the header is taken out of the menu (one place each), what is
+ * hidden is taken out everywhere, and what stays is renamed and put in the
+ * saved order. Every theme draws its pills or tiles from this same list, so
+ * they all follow.
+ */
+app.initializers.add(
+  'ernestdefoe-header-nav-menu',
+  () => {
+    extend(IndexSidebar.prototype, 'navItems', function (items) {
+      if (isReading()) return;
+
+      const cfg = current();
+
+      cfg.items.forEach((it, i) => {
+        const priority = 1000 - i;
+
+        if (it.custom) {
+          const href = safeHref(it.href);
+          if (it.place !== 'menu' || !href || !it.label) return;
+
+          items.add(
+            it.key,
+            <LinkButton
+              href={href}
+              icon={it.icon || 'fas fa-link'}
+              external={!href.startsWith('/')}
+              target={it.newTab ? '_blank' : undefined}
+              rel={it.newTab ? 'noopener noreferrer' : undefined}
+            >
+              {it.label}
+            </LinkButton>,
+            priority
+          );
+          return;
+        }
+
+        if (!items.has(it.key)) return;
+
+        if (it.place !== 'menu') {
+          items.remove(it.key);
+          return;
+        }
+
+        const v = items.get(it.key);
+        if ((it.label || it.icon) && v && v.tag && v.attrs) {
+          items.setContent(it.key, m(v.tag, { ...v.attrs, icon: it.icon || v.attrs.icon }, it.label || v.children));
+        }
+        items.setPriority(it.key, priority);
+      });
+    });
+  },
+  -1000
+);

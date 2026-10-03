@@ -1,8 +1,20 @@
 {
     "name": "ernestdefoe/header-nav",
-    "description": "Move the forum's navigation into the header, grouped, instead of a pill row above the discussion list.",
+    "description": "Put your forum's navigation in the header and decide what goes where: reorder, rename, hide, change icons and add your own links.",
+    "keywords": [
+        "flarum",
+        "navigation",
+        "header",
+        "menu",
+        "links"
+    ],
     "type": "flarum-extension",
     "license": "MIT",
+    "homepage": "https://github.com/ernestdefoe/header-nav",
+    "support": {
+        "issues": "https://github.com/ernestdefoe/header-nav/issues",
+        "source": "https://github.com/ernestdefoe/header-nav"
+    },
     "require": {
         "php": "^8.3",
         "flarum/core": "^2.0"
@@ -16,7 +28,7 @@
     "extra": {
         "flarum-extension": {
             "title": "Header Nav",
-            "category": "theme",
+            "category": "feature",
             "icon": {
                 "name": "fa-solid fa-bars",
                 "backgroundColor": "#B22222",

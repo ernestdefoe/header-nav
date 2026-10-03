@@ -87,106 +87,180 @@
 }
 
 /*
- * 🚨 The logo is capped so the nav has room.
+ * 🚨 On a phone the header links are rows in Flarum's drawer.
  *
- * At its natural size it rendered 406px wide and ate the space the navigation
- * needs — which is why everything was overflowing into the menu in the first
- * place.
- *
- * 🚨 The cap is on HEIGHT and the mark is wide, so every pixel here costs
- * roughly three and a half of width.
- *
- * Measured on fbsfb, which carries NINE header links — not on the demo, which
- * has five and showed 56px costing nothing at all. The real numbers, links
- * visible in the bar:
- *
- *            1280   1100   1024    980    900
- *     44px      6      5      4      4      3
- *     56px      6      5      4      3      3
- *     64px      5      4      4      3      2
- *
- * So 56px costs one link in a narrow band around 980px and nothing anywhere
- * else, which is worth 27% more logo. 64px costs one at 1280 and 1100 — the
- * widths most people are actually on — and is not worth it.
- */
-.App-header .Header-logo {
-  max-height: 56px;
-}
-
-/*
- * 🚨 767.98px, NOT 767px — Flarum's own mobile layout switches at the fraction.
- *
- * A rule at 767px leaves a 0.98px band where the drawer is in use and these
- * overrides are not, and fractional viewport widths are routine on Android and
- * with browser zoom. It reads as an intermittent glitch. This exact gap has
- * caused this exact bug before, on another site.
+ * They used to be hidden here and the pill row was left to carry them. Now a
+ * link that is in the header is taken OUT of the menu, so hiding it on a phone
+ * would hide it everywhere: the drawer is where Flarum puts the header's items
+ * on a narrow screen, and that is where they belong.
  */
 @media (max-width: 767.98px) {
-  /*
-   * 🚨 The logo's row takes the full drawer, so the controls wrap BELOW it.
-   *
-   * Measured at 390px: the drawer is 270px, the title block 165px, and the
-   * search, preferences, sign-up and log-in items were laid out beside it —
-   * running off the edge, with "System preference" clipped. The mark is wide,
-   * so it will always win that row; giving it the row outright is what stops
-   * it taking the menu with it.
-   */
-  /*
-   * 🚨 `width: 100%` alone does NOT do it. The title is a flex ITEM with the
-   * default `flex-shrink: 1`, so a 100% width is simply shrunk back to 165px to
-   * make room for the controls beside it — measured: the rule was in the served
-   * CSS, inside the right media query, and the computed width was still 165.
-   *
-   * The parent has to be allowed to wrap, and the title has to refuse to
-   * shrink. Both, or neither works.
-   */
-  .App-drawer .App-header > .container {
+  .App-drawer .Header-controls .HeaderNav-link {
+    display: flex;
+    width: 100%;
+    border-radius: 0;
+    padding: 10px 15px;
+  }
+}
+
+// ── The editor (/header-nav) ────────────────────────────────────────────────
+.HeaderNavEditor {
+  max-width: 920px;
+  padding-top: 24px;
+  padding-bottom: 60px;
+
+  h1 {
+    margin: 0 0 6px;
+    font-size: 1.6rem;
+  }
+}
+
+.HeaderNavEditor-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 18px;
+  margin: 14px 0 18px;
+  font-size: 0.85rem;
+  color: var(--muted-color);
+}
+
+.HeaderNavEditor-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.HeaderNavEditor-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 10px 12px;
+  border: 1px solid var(--control-bg);
+  border-radius: var(--border-radius);
+  background: var(--body-bg);
+
+  &.is-hidden .HeaderNavEditor-preview,
+  &.is-hidden .HeaderNavEditor-fields {
+    opacity: 0.55;
+  }
+
+  &.is-missing {
+    border-style: dashed;
+  }
+
+  // Sortable's placeholder while dragging.
+  &.sortable-ghost {
+    opacity: 0.4;
+  }
+}
+
+.HeaderNavEditor-handle {
+  flex: 0 0 auto;
+  padding: 8px 4px;
+  color: var(--muted-color);
+  cursor: grab;
+  touch-action: none;
+
+  &:active {
+    cursor: grabbing;
+  }
+}
+
+.HeaderNavEditor-preview {
+  flex: 0 0 32px;
+  height: 36px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  color: var(--primary-color);
+}
+
+.HeaderNavEditor-fields {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.HeaderNavEditor-line {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+
+  .FormControl {
+    flex: 1 1 180px;
+    min-width: 0;
+  }
+
+  .HeaderNavEditor-icon {
+    flex: 0 1 200px;
+  }
+
+  .FormControl.is-invalid {
+    border-color: #d83e3e;
+  }
+}
+
+.HeaderNavEditor-newTab {
+  flex: 0 0 auto;
+  white-space: nowrap;
+  font-size: 0.9rem;
+}
+
+.HeaderNavEditor-note {
+  margin: 0;
+  font-size: 0.82rem;
+  color: var(--muted-color);
+
+  // Its own red, never a theme alert colour: those can be white.
+  &.is-error {
+    color: #d83e3e;
+  }
+}
+
+.HeaderNavEditor-place {
+  flex: 0 0 auto;
+  display: inline-flex;
+}
+
+.HeaderNavEditor-remove {
+  flex: 0 0 auto;
+}
+
+.HeaderNavEditor-add {
+  margin: 12px 0 24px;
+}
+
+.HeaderNavEditor-direct .FormControl {
+  max-width: 100px;
+}
+
+.HeaderNavEditor-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 18px;
+}
+
+.HeaderNavEditor-unsaved {
+  font-size: 0.85rem;
+  color: var(--muted-color);
+}
+
+// A phone: the placement buttons drop under the fields.
+@media (max-width: 767.98px) {
+  .HeaderNavEditor-row {
     flex-wrap: wrap;
   }
 
-  .App-drawer .Header-title {
-    flex: 0 0 100%;
+  .HeaderNavEditor-place {
     width: 100%;
-  }
-
-  // Smaller too: on a phone the logo competes with the drawer button and the
-  // search icon rather than with the nav.
-  .App-header .Header-logo {
-    max-height: 40px;
-  }
-}
-
-/*
- * 🚨 The visible pill row is BESPOKE's, not Flarum's.
- *
- * Flarum's own `.IndexPage-nav` measures 0x0 on this forum — the theme renders
- * its own `.BespokeHeaderNav` instead. Hiding Flarum's nav therefore hid
- * something nobody could see, while the real row carried on.
- *
- * Only the pills go. The same container also holds "Start a Discussion", which
- * is the primary control on the page and has nothing to do with navigation.
- */
-@media (min-width: 768px) {
-  // 🚨 Two classes, to beat Bespoke's own `.BespokeHeaderNav-pills{display:flex}`.
-  //
-  // Extension stylesheets are concatenated and Bespoke's lands AFTER this one,
-  // so at equal specificity its rule simply wins. A media query carries no
-  // extra priority — source order decides, which is the same thing that caught
-  // me on a grid-width rule earlier today.
-  .BespokeHeaderNav > .BespokeHeaderNav-pills {
-    display: none;
-  }
-}
-
-/*
- * 🚨 On a phone the header links go and the pill row comes back.
- *
- * The header has room for a logo and two controls at 375px and nothing else.
- * Flarum moves these into its drawer anyway, so hiding them here only stops
- * them competing for a few pixels they were never going to win.
- */
-@media (max-width: 767px) {
-  .Header-controls .HeaderNav-link {
-    display: none;
+    justify-content: flex-end;
   }
 }

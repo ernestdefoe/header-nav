@@ -1,45 +1,63 @@
-/**
- * What goes in the header, and how it is grouped.
- *
- * 🚨 Four direct links and ONE dropdown, not nine pills moved sideways.
- *
- * The pill row had nine equal-weight items wrapping onto two lines, which is a
- * list rather than navigation — nothing in it said which were the things people
- * come here for. Discussions, the pick'em, fantasy and the rosters are those
- * four; everything else is somewhere you go occasionally, so it lives behind
- * "More" and stops competing.
- *
- * Each entry names the `li` class Flarum's own nav uses for the same
- * destination, so the sidebar copy can be hidden precisely rather than by
- * hiding the whole nav — which would take the conference tags with it.
- */
-export const PRIMARY = [
-  { key: 'discussions', href: '/all', icon: 'far fa-comments', label: 'ernestdefoe-header-nav.forum.discussions', item: 'item-allDiscussions' },
-  { key: 'picks', href: '/picks', icon: 'fas fa-football', label: 'ernestdefoe-header-nav.forum.picks', item: 'item-picks' },
-  { key: 'fantasy', href: '/fantasy', icon: 'fas fa-trophy', label: 'ernestdefoe-header-nav.forum.fantasy', item: 'item-fantasy' },
-  { key: 'roster', href: '/roster', icon: 'fas fa-users', label: 'ernestdefoe-header-nav.forum.roster', item: 'item-roster' },
-];
-
-export const MORE = [
-  // A support forum's knowledge base and tracker are what people come for, so
-  // they lead the second group and stay on the row ahead of Articles.
-  { key: 'kb', href: '/kb', icon: 'fas fa-book', label: 'ernestdefoe-header-nav.forum.kb', item: 'item-knowledge-base' },
-  { key: 'issues', href: '/issues', icon: 'fas fa-bug', label: 'ernestdefoe-header-nav.forum.issues', item: 'item-bugtracker' },
-  { key: 'articles', href: '/c/articles', icon: 'fas fa-newspaper', label: 'ernestdefoe-header-nav.forum.articles', item: 'item-pagebuilder-articles' },
-  { key: 'gallery', href: '/gallery', icon: 'fas fa-images', label: 'ernestdefoe-header-nav.forum.gallery', item: 'item-atrium' },
-  { key: 'badges', href: '/badges', icon: 'fas fa-award', label: 'ernestdefoe-header-nav.forum.badges', item: 'item-badges' },
-  { key: 'tags', href: '/tags', icon: 'fas fa-th-large', label: 'ernestdefoe-header-nav.forum.tags', item: 'item-tags' },
-  { key: 'hashtags', href: '/hashtags', icon: 'fas fa-hashtag', label: 'ernestdefoe-header-nav.forum.hashtags', item: 'item-hashtags' },
-];
+import IndexSidebar from 'flarum/forum/components/IndexSidebar';
+import extractText from 'flarum/common/utils/extractText';
+import { isManageable } from './config';
 
 /**
- * The order is the organisation.
- *
- * HeaderPrimary's OverflowingList drops from the END when space runs out, so
- * the four things people come here for sit first and are the last to go into
- * the overflow menu.
+ * While this is true the sidebar is being read, not drawn, so the nav filter
+ * leaves it alone — otherwise the editor could never see what it had hidden.
  */
-export const ALL = [...PRIMARY, ...MORE];
+let reading = false;
 
-/** How many links stay on the row before the rest go behind core's "More" menu. */
-export const DIRECT = 4;
+export function isReading() {
+  return reading;
+}
+
+/**
+ * Every destination the forum's own nav offers, in its own order.
+ *
+ * 🚨 Read from IndexSidebar.navItems(), not from the page.
+ *
+ * The first version read `.IndexPage-nav` out of the DOM, which only exists on
+ * the discussion list, renders after the header, and is replaced outright by
+ * some themes (Bespoke draws its own row). Asking the component for its items
+ * works on every page, before anything has rendered, under any theme — and it
+ * is the same list every theme builds its pills or tiles from.
+ *
+ * Separators, the per-tag links and "More tags…" are the sidebar's structure
+ * and are never offered. Everything else is: a LINK can go in the header; an
+ * entry that is not a link (a button such as "Mark all as read") can only be
+ * kept in the menu or hidden, because there is nothing to send a visitor to.
+ */
+export function readNav() {
+  reading = true;
+
+  try {
+    const sidebar = Object.create(IndexSidebar.prototype);
+    sidebar.attrs = {};
+
+    const list = IndexSidebar.prototype.navItems.call(sidebar);
+
+    return list
+      .toArray()
+      .filter((v) => v && v.itemName && isManageable(v.itemName) && v.attrs)
+      .map((v) => {
+        const link = typeof v.attrs.href === 'string';
+
+        return {
+          key: v.itemName,
+          link,
+          href: link ? v.attrs.href : null,
+          icon: typeof v.attrs.icon === 'string' ? v.attrs.icon : '',
+          label: extractText(v.children) || v.itemName,
+        };
+      })
+      // An entry with no visible name is layout, not a destination.
+      .filter((n) => n.label && n.label !== n.key || n.link);
+  } catch (e) {
+    // A nav extension that cannot be called outside its page must not take
+    // the header with it.
+    return [];
+  } finally {
+    reading = false;
+  }
+}
