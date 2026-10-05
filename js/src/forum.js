@@ -7,7 +7,6 @@ import LinkButton from 'flarum/common/components/LinkButton';
 import IndexSidebar from 'flarum/forum/components/IndexSidebar';
 import { readNav, isReading } from './forum/nav';
 import { current, safeHref } from './forum/config';
-import HeaderNavEditor from './forum/components/HeaderNavEditor';
 import { applyLogo } from './forum/logo';
 
 app.initializers.add('ernestdefoe-header-nav', () => {
@@ -126,7 +125,7 @@ app.initializers.add('ernestdefoe-header-nav', () => {
       });
   });
 
-  app.routes['ernestdefoe-header-nav.editor'] = { path: '/header-nav', component: HeaderNavEditor };
+  app.routes['ernestdefoe-header-nav.editor'] = { path: '/header-nav', component: () => import('./forum/components/HeaderNavEditor') };
 });
 
 /*

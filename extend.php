@@ -5,6 +5,9 @@ use Flarum\Extend;
 return [
     (new Extend\Frontend('forum'))
         ->js(__DIR__ . '/js/dist/forum.js')
+        // The nav editor (and SortableJS with it) is its own chunk, loaded
+        // only on /header-nav; this publishes it.
+        ->jsDirectory(__DIR__ . '/js/dist/forum')
         ->css(__DIR__ . '/less/forum.less')
         ->route('/header-nav', 'ernestdefoe-header-nav.editor'),
 
