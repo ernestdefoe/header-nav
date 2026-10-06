@@ -69,9 +69,11 @@ composer update ernestdefoe/header-nav
 php flarum cache:clear
 ```
 
-## Discuss
+## Support
 
-Questions, ideas and release notes: [Header Nav on discuss.flarum.org](https://discuss.flarum.org/d/39984-header-nav).
+- **Support forum:** [Header Nav on ernestdefoe.online](https://ernestdefoe.online/d/105)
+- **Flarum community:** [Header Nav on discuss.flarum.org](https://discuss.flarum.org/d/39984-header-nav)
+- **Bug reports:** [GitHub issues](https://github.com/ernestdefoe/header-nav/issues)
 
 ## Licence
 
