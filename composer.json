@@ -12,6 +12,7 @@
     "license": "MIT",
     "homepage": "https://github.com/ernestdefoe/header-nav",
     "support": {
+        "forum": "https://discuss.flarum.org/d/39984-header-nav",
         "issues": "https://github.com/ernestdefoe/header-nav/issues",
         "source": "https://github.com/ernestdefoe/header-nav"
     },
