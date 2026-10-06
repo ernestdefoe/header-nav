@@ -69,6 +69,10 @@ composer update ernestdefoe/header-nav
 php flarum cache:clear
 ```
 
+## Discuss
+
+Questions, ideas and release notes: [Header Nav on discuss.flarum.org](https://discuss.flarum.org/d/39984-header-nav).
+
 ## Licence
 
 MIT.
