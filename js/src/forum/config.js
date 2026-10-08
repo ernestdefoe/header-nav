@@ -82,9 +82,7 @@ function normalise(raw) {
       place: PLACES.includes(it.place) ? it.place : 'menu',
       label: typeof it.label === 'string' ? it.label.slice(0, 60) : '',
       icon: safeIcon(it.icon),
-      ...(it.custom
-        ? { custom: true, href: typeof it.href === 'string' ? it.href.slice(0, 500) : '', newTab: !!it.newTab }
-        : {}),
+      ...(it.custom ? { custom: true, href: typeof it.href === 'string' ? it.href.slice(0, 500) : '', newTab: !!it.newTab } : {}),
     }))
     // A custom link cannot be "hidden" — there is nothing to hide it from.
     .map((it) => (it.custom && it.place === 'hidden' ? { ...it, place: 'menu' } : it));

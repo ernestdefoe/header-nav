@@ -37,22 +37,24 @@ export function readNav() {
 
     const list = IndexSidebar.prototype.navItems.call(sidebar);
 
-    return list
-      .toArray()
-      .filter((v) => v && v.itemName && isManageable(v.itemName) && v.attrs)
-      .map((v) => {
-        const link = typeof v.attrs.href === 'string';
+    return (
+      list
+        .toArray()
+        .filter((v) => v && v.itemName && isManageable(v.itemName) && v.attrs)
+        .map((v) => {
+          const link = typeof v.attrs.href === 'string';
 
-        return {
-          key: v.itemName,
-          link,
-          href: link ? v.attrs.href : null,
-          icon: typeof v.attrs.icon === 'string' ? v.attrs.icon : '',
-          label: extractText(v.children) || v.itemName,
-        };
-      })
-      // An entry with no visible name is layout, not a destination.
-      .filter((n) => n.label && n.label !== n.key || n.link);
+          return {
+            key: v.itemName,
+            link,
+            href: link ? v.attrs.href : null,
+            icon: typeof v.attrs.icon === 'string' ? v.attrs.icon : '',
+            label: extractText(v.children) || v.itemName,
+          };
+        })
+        // An entry with no visible name is layout, not a destination.
+        .filter((n) => (n.label && n.label !== n.key) || n.link)
+    );
   } catch (e) {
     // A nav extension that cannot be called outside its page must not take
     // the header with it.

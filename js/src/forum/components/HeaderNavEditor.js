@@ -74,9 +74,15 @@ export default class HeaderNavEditor extends Page {
         </header>
 
         <div className="HeaderNavEditor-legend">
-          <span><strong>{t('place_header')}</strong> {t('place_header_help')}</span>
-          <span><strong>{t('place_menu')}</strong> {t('place_menu_help')}</span>
-          <span><strong>{t('place_hidden')}</strong> {t('place_hidden_help')}</span>
+          <span>
+            <strong>{t('place_header')}</strong> {t('place_header_help')}
+          </span>
+          <span>
+            <strong>{t('place_menu')}</strong> {t('place_menu_help')}
+          </span>
+          <span>
+            <strong>{t('place_hidden')}</strong> {t('place_hidden_help')}
+          </span>
         </div>
 
         <ol className="HeaderNavEditor-list" oncreate={(vnode) => this.sortable(vnode.dom)}>

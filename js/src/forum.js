@@ -37,11 +37,7 @@ app.initializers.add('ernestdefoe-header-nav', () => {
   override(OverflowingList.prototype, 'recalculate', function (original) {
     const count = (this.attrs.items || []).length;
 
-    if (
-      this.element?.closest('#header-primary') &&
-      this.visibleCount !== null &&
-      this.itemWidths.length !== count
-    ) {
+    if (this.element?.closest('#header-primary') && this.visibleCount !== null && this.itemWidths.length !== count) {
       this.visibleCount = null;
       this.itemWidths = [];
       m.redraw();
@@ -57,7 +53,7 @@ app.initializers.add('ernestdefoe-header-nav', () => {
     const DIRECT = current().direct;
 
     // In the phone drawer the links are a list with room for all of them.
-    if (!list.closest('#header-primary') || list.closest('.App-drawer') && window.innerWidth < 768 || this.itemWidths.length <= DIRECT) return free;
+    if (!list.closest('#header-primary') || (list.closest('.App-drawer') && window.innerWidth < 768) || this.itemWidths.length <= DIRECT) return free;
 
     const direct = this.itemWidths.slice(0, DIRECT).reduce((sum, width) => sum + width, 0);
 
