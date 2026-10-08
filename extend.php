@@ -4,17 +4,17 @@ use Flarum\Extend;
 
 return [
     (new Extend\Frontend('forum'))
-        ->js(__DIR__ . '/js/dist/forum.js')
+        ->js(__DIR__.'/js/dist/forum.js')
         // The nav editor (and SortableJS with it) is its own chunk, loaded
         // only on /header-nav; this publishes it.
-        ->jsDirectory(__DIR__ . '/js/dist/forum')
-        ->css(__DIR__ . '/less/forum.less')
+        ->jsDirectory(__DIR__.'/js/dist/forum')
+        ->css(__DIR__.'/less/forum.less')
         ->route('/header-nav', 'ernestdefoe-header-nav.editor'),
 
     (new Extend\Frontend('admin'))
-        ->js(__DIR__ . '/js/dist/admin.js'),
+        ->js(__DIR__.'/js/dist/admin.js'),
 
-    new Extend\Locales(__DIR__ . '/locale'),
+    new Extend\Locales(__DIR__.'/locale'),
 
     // The saved navigation, to every visitor: the header and the menu are drawn
     // from it on every page. Null until a forum saves one, and the starting
