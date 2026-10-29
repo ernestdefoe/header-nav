@@ -35,6 +35,59 @@ Changes show in the header as soon as you save.
 
 <img src="screenshots/phone-drawer.png" alt="On a phone, the header links are rows in the drawer" width="390">
 
+## Mega menus
+
+A header link can open a **mega menu**: a card of categories and links under
+the header, instead of going straight to a page.
+
+![A mega menu under the header: a greeting, an announcement, three categories of links with icons and badges, a promotion and a help block](screenshots/mega-menu.png)
+
+In the navigation editor, press **Mega menu** on a header link to give it one,
+or **Add a mega menu** for a header item of its own. Each menu opens in a
+builder with a live preview of the desktop card and the phone version:
+
+- **Categories and links.** Up to 6 categories, each with up to 30 links. Drag
+  the handles to reorder categories, and to move links within a category or
+  into another one. The handles also work with the arrow keys. A category can
+  be stacked under the one before it.
+- **Where a link goes.** An address on your forum, any `http(s)` address or
+  `mailto:`, or a built-in destination: anything in your forum's menu
+  (including pages your extensions add), a tag, Search, Settings,
+  Notifications, Log in and Sign up. Links that don't apply to a visitor, such
+  as Log in for someone already logged in, are left out for them.
+- **Each link** can have a description, an icon and icon colour, a badge in a
+  colour of your choice, and can open in a new tab.
+- **Appearance.** Seven styles (Classic, Soft cards, Accent rails, Raised
+  cards, Header bands, Underlined headings, Inset panels), title bands, icon
+  tiles, compact or comfortable spacing, width, columns, borders, shadows,
+  dividers, separators, a faint category-icon watermark, and 13 textures with
+  a strength slider. Menus use your forum's own colours, light and dark.
+- **Extras.** A greeting with the visitor's avatar ("Good morning, Ernest", by
+  the visitor's own clock) and one for guests, a search field that filters the
+  menu, an announcement visitors can dismiss, a promotion with an optional
+  background image, and a help block.
+- **Who sees it.** Everyone, guests, members or chosen groups, for a whole
+  menu, a category, a link or the promotion. Your forum only sends visitors
+  the parts they're allowed to see.
+- **How it opens.** On hover or click, or on click only. The header item can
+  look like your other header links or like an outlined button.
+- **Duplicate, export and import** a menu as a JSON file, and switch a menu
+  off without deleting it.
+
+![Community menu with accent rails, a honeycomb texture and category watermarks](screenshots/mega-menu-textured.png)
+
+On a phone, the menus are in the drawer with your other header links, and open
+in place. When the header runs out of room, they work the same way inside the
+**More** menu. Escape closes a menu and puts you back on its link. The arrow
+down key opens it and takes you to its search field or first link.
+
+<img src="screenshots/mega-phone.png" alt="On a phone, a mega menu opens in place inside the drawer" width="390">
+
+![The mega menu builder: preview above, categories and links below](screenshots/mega-builder.png)
+
+The menus open instantly and the builder only loads for admins. A forum that
+has no mega menus sends and loads nothing extra.
+
 ## Good to know
 
 - **Nothing is linked into existence.** An entry belongs to the extension that
@@ -47,7 +100,8 @@ Changes show in the header as soon as you save.
 - **Buttons stay buttons.** A menu entry that is not a link, such as "Mark all
   as read", can be kept in the menu or hidden, but not put in the header.
 - **Only safe addresses.** A custom link must be a path on your forum
-  (`/p/privacy`), an `http(s)` address or `mailto:`. Anything else is refused.
+  (`/p/privacy`), an `http(s)` address or `mailto:`. Anything else is refused,
+  and so is a mega menu colour that isn't a colour.
 - **Before you save anything**, the header starts with the common destinations
   your forum has — discussions, a pick'em, a roster, a knowledge base, an issue
   tracker, articles, a gallery, badges, tags and hashtags, whichever exist —

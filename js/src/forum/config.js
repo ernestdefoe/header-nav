@@ -9,6 +9,7 @@ import app from 'flarum/forum/app';
  *         label?: string, icon?: string },
  *       { key: 'custom-x1y2', custom: true, place: 'header' | 'menu',
  *         label: string, href: string, icon?: string, newTab?: boolean },
+ *       { key: 'mega-abc', custom: true, mega: true, place: 'header' | 'hidden' },
  *   ] }
  *
  * `key` is the name Flarum's own nav uses for the entry (the `item-<key>`
@@ -57,7 +58,12 @@ export function isManageable(key) {
  * this forum, an http(s) address, or mailto — anything else is dropped.
  */
 export function safeHref(href) {
-  const h = String(href || '').trim();
+  // eslint-disable-next-line no-control-regex
+  const h = String(href || '')
+    .replace(/[\u0000-\u001f\u007f]/g, '')
+    .trim();
+  // A backslash is never sent: browsers read `/\example.com` as `//example.com`.
+  if (h.includes('\\')) return null;
   if (h.startsWith('/') && !h.startsWith('//')) return h;
   if (/^https?:\/\/[^\s]+$/i.test(h)) return h;
   if (/^mailto:[^\s]+$/i.test(h)) return h;
@@ -83,9 +89,13 @@ function normalise(raw) {
       label: typeof it.label === 'string' ? it.label.slice(0, 60) : '',
       icon: safeIcon(it.icon),
       ...(it.custom ? { custom: true, href: typeof it.href === 'string' ? it.href.slice(0, 500) : '', newTab: !!it.newTab } : {}),
+      ...(it.custom && it.mega ? { mega: true } : {}),
     }))
-    // A custom link cannot be "hidden" — there is nothing to hide it from.
-    .map((it) => (it.custom && it.place === 'hidden' ? { ...it, place: 'menu' } : it));
+    // A custom link cannot be "hidden" — there is nothing to hide it from. A
+    // mega menu of its own lives in the header or nowhere: the sidebar has no
+    // room for one.
+    .map((it) => (it.mega ? { ...it, place: it.place === 'header' ? 'header' : 'hidden' } : it))
+    .map((it) => (it.custom && !it.mega && it.place === 'hidden' ? { ...it, place: 'menu' } : it));
 
   const logo = parseInt(cfg.logo, 10);
 
@@ -125,4 +135,12 @@ let counter = 0;
 export function newCustomKey() {
   counter += 1;
   return `custom-${Date.now().toString(36)}${counter}`;
+}
+
+/**
+ * The mega menus this visitor may see, as the server filtered them: never the
+ * audience rules, never another group's links. Absent until a forum makes one.
+ */
+export function megaMenus() {
+  return app.forum.attribute('headerNavMega') || [];
 }

@@ -26,6 +26,11 @@
             "email": "ernestdefoe@gmail.com"
         }
     ],
+    "autoload": {
+        "psr-4": {
+            "ErnestDefoe\\HeaderNav\\": "src/"
+        }
+    },
     "autoload-dev": {
         "psr-4": {
             "ErnestDefoe\\HeaderNav\\Tests\\": "tests/"

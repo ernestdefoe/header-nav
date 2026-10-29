@@ -6,7 +6,8 @@ import Icon from 'flarum/common/components/Icon';
 import LinkButton from 'flarum/common/components/LinkButton';
 import IndexSidebar from 'flarum/forum/components/IndexSidebar';
 import { readNav, isReading } from './forum/nav';
-import { current, safeHref } from './forum/config';
+import { current, safeHref, megaMenus } from './forum/config';
+import MegaMenu, { prefetchPanel } from './forum/mega';
 import { applyLogo } from './forum/logo';
 
 app.initializers.add('ernestdefoe-header-nav', () => {
@@ -82,10 +83,29 @@ app.initializers.add('ernestdefoe-header-nav', () => {
     const cfg = current();
     const offered = new Map(readNav().map((n) => [n.key, n]));
 
+    // A header item with a mega menu becomes its trigger. The first menu this
+    // visitor may see wins, so a guest and a member version can share an item.
+    const megas = new Map();
+    megaMenus().forEach((menu) => megas.has(menu.attach) || megas.set(menu.attach, menu));
+    if (megas.size) prefetchPanel();
+
     cfg.items
       .filter((it) => it.place === 'header')
       .forEach((it, i) => {
         let href, icon, label, external;
+        const mega = megas.get(it.key);
+
+        if (it.mega) {
+          // A mega menu of its own: nothing to show if this visitor has none.
+          if (!mega) return;
+          label = it.label || mega.title;
+          items.add(
+            `ernestdefoe-header-nav-${it.key}`,
+            <MegaMenu menu={mega} label={label} icon={it.icon || mega.icon || 'fas fa-th-large'} />,
+            100 - i
+          );
+          return;
+        }
 
         if (it.custom) {
           href = safeHref(it.href);
@@ -100,6 +120,11 @@ app.initializers.add('ernestdefoe-header-nav', () => {
           href = n.href;
           icon = it.icon || n.icon;
           label = it.label || n.label;
+        }
+
+        if (mega) {
+          items.add(`ernestdefoe-header-nav-${it.key}`, <MegaMenu menu={mega} label={label} icon={icon} href={href} />, 100 - i);
+          return;
         }
 
         items.add(
