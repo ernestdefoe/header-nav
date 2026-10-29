@@ -87,6 +87,25 @@
 }
 
 /*
+ * 🚨 The overflow menu is a light (or dark) card of its own, not the header:
+ * its rows take the menu's text colour, at the weight of the rule above that
+ * paints header links. Without this a dark header (Masthead, Bespoke) drew
+ * them in its white on the white menu.
+ */
+.App .App-header .Header-controls .Dropdown-menu .HeaderNav-link {
+  &,
+  &:hover,
+  &:focus {
+    color: var(--text-color);
+  }
+
+  &:hover,
+  &:focus {
+    background: var(--control-bg);
+  }
+}
+
+/*
  * 🚨 On a phone the header links are rows in Flarum's drawer.
  *
  * They used to be hidden here and the pill row was left to carry them. Now a
