@@ -1,3 +1,4 @@
+import app from 'flarum/forum/app';
 import { current } from './config';
 
 /**
@@ -45,4 +46,41 @@ export function applyLogo() {
     `.App-header .Header-logo{max-height:${phone}px}}`;
 
   if (el.textContent !== css) el.textContent = css;
+}
+
+let homeBound = false;
+
+/**
+ * The logo's destination for signed-in members, when a forum sets one.
+ *
+ * Flarum's logo always goes to the forum's home page, which is the same page
+ * for everyone, so a forum whose home page is a landing page for guests sent
+ * its members back there too. Core routes the logo with its own click
+ * listener; this one runs first (capture, on the document) and takes the
+ * member elsewhere instead. The href changes too, so a middle click or "open
+ * in new tab" goes to the same place. Guests are left alone.
+ */
+export function applyHome() {
+  const link = document.getElementById('home-link');
+  if (!link) return;
+
+  const path = app.session.user ? current().home : null;
+  const base = app.forum.attribute('baseUrl');
+  const href = path ? base + path : base;
+  if (link.getAttribute('href') !== href) link.setAttribute('href', href);
+
+  if (homeBound) return;
+  homeBound = true;
+  document.addEventListener(
+    'click',
+    (e) => {
+      const target = app.session.user && current().home;
+      if (!target || !e.target.closest || !e.target.closest('#home-link')) return;
+      if (e.ctrlKey || e.metaKey || e.shiftKey || e.button !== 0) return;
+      e.preventDefault();
+      e.stopImmediatePropagation();
+      m.route.set(target);
+    },
+    true
+  );
 }

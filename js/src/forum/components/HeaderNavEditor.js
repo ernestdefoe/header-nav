@@ -5,8 +5,8 @@ import Icon from 'flarum/common/components/Icon';
 import extractText from 'flarum/common/utils/extractText';
 import Sortable from 'sortablejs';
 import { readNav } from '../nav';
-import { applyLogo } from '../logo';
-import { current, defaults, isSaved, prepare, newCustomKey, safeHref, safeIcon, PLACES } from '../config';
+import { applyLogo, applyHome } from '../logo';
+import { current, defaults, isSaved, prepare, newCustomKey, safeHref, safeIcon, memberHome, PLACES } from '../config';
 import MegaBuilder from './MegaBuilder';
 import { LIMITS, fill, newId, starter, serialise, problems, exportMenu, importMenu } from '../editor/megaModel';
 import styles from '../editor/styles';
@@ -78,6 +78,7 @@ export default class HeaderNavEditor extends Page {
 
     this.direct = cfg.direct;
     this.logo = cfg.logo || '';
+    this.home = cfg.home || '';
     this.offered = offered;
     this.rows = [
       // A mega menu's own row stays only while its menu exists.
@@ -309,6 +310,23 @@ export default class HeaderNavEditor extends Page {
           />
         </div>
 
+        <div className="Form-group HeaderNavEditor-direct">
+          <label for="HeaderNavEditor-home">{t('home_label')}</label>
+          <p className="helpText">{t('home_help')}</p>
+          <input
+            id="HeaderNavEditor-home"
+            className="FormControl"
+            type="text"
+            placeholder={t('home_placeholder')}
+            value={this.home}
+            oninput={(e) => {
+              this.home = e.target.value;
+              this.dirty = true;
+            }}
+          />
+          {this.home.trim() && !memberHome(this.home.trim()) ? <p className="HeaderNavEditor-note is-error">{t('home_invalid')}</p> : null}
+        </div>
+
         {actions}
       </div>
     );
@@ -526,6 +544,7 @@ export default class HeaderNavEditor extends Page {
     const cfg = prepare({
       direct: this.direct,
       logo: this.logo,
+      home: this.home.trim(),
       // A custom link with no name or no usable address has nowhere to go.
       items: this.rows
         // A mega menu's own item goes only while its menu exists.
@@ -548,6 +567,7 @@ export default class HeaderNavEditor extends Page {
         // The menus come back from the forum as this admin would see them.
         app.forum.pushAttributes({ headerNav: cfg, headerNavMega: null });
         applyLogo();
+        applyHome();
         this.load(cfg, true);
         app.alerts.show({ type: 'success' }, t('saved'));
         return this.mega && app.request({ method: 'GET', url: apiUrl }).then((payload) => app.store.pushPayload(payload));

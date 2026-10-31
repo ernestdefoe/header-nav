@@ -4,7 +4,7 @@ import app from 'flarum/forum/app';
  * The saved navigation: one ordered list that governs the header AND the
  * sidebar menu.
  *
- *   { v: 1, direct: 4, logo: null | 20–120, items: [
+ *   { v: 1, direct: 4, logo: null | 20–120, home: null | '/all', items: [
  *       { key: 'allDiscussions', place: 'header' | 'menu' | 'hidden',
  *         label?: string, icon?: string },
  *       { key: 'custom-x1y2', custom: true, place: 'header' | 'menu',
@@ -70,6 +70,12 @@ export function safeHref(href) {
   return null;
 }
 
+/** Where the logo takes signed-in members: a path on this forum, or nothing. */
+export function memberHome(path) {
+  const h = safeHref(String(path || '').slice(0, 200));
+  return h && h.startsWith('/') && h !== '/' ? h : null;
+}
+
 /** An icon is a Font Awesome class list: letters, digits, dashes, spaces. */
 export function safeIcon(icon) {
   const i = String(icon || '').trim();
@@ -98,12 +104,15 @@ function normalise(raw) {
     .map((it) => (it.custom && !it.mega && it.place === 'hidden' ? { ...it, place: 'menu' } : it));
 
   const logo = parseInt(cfg.logo, 10);
+  const home = memberHome(cfg.home);
 
   return {
     v: 1,
     direct: Number.isFinite(direct) ? Math.min(12, Math.max(1, direct)) : DEFAULT_DIRECT,
     // Null leaves the theme's logo exactly as it is.
     logo: Number.isFinite(logo) ? Math.min(120, Math.max(20, logo)) : null,
+    // Null keeps the logo on the forum's home page for everyone.
+    ...(home ? { home } : {}),
     items,
   };
 }

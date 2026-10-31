@@ -31,6 +31,11 @@ Discord — to the header or the menu, opening in the same tab or a new one.
 And choose **how many links sit on the header row** before the rest go behind
 **More**. A narrow window shows fewer; on a phone they are all in the drawer.
 
+The **logo link for signed-in members** sends members somewhere other than the
+home page when they click the logo, such as `/all` or `/following`. Guests still
+go to the home page set in Admin → Basics, so it can stay a landing page for
+them. Leave it empty to keep Flarum's usual behavior.
+
 Changes show in the header as soon as you save.
 
 <img src="screenshots/phone-drawer.png" alt="On a phone, the header links are rows in the drawer" width="390">

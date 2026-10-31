@@ -8,7 +8,7 @@ import IndexSidebar from 'flarum/forum/components/IndexSidebar';
 import { readNav, isReading } from './forum/nav';
 import { current, safeHref, megaMenus } from './forum/config';
 import MegaMenu, { prefetchPanel } from './forum/mega';
-import { applyLogo } from './forum/logo';
+import { applyLogo, applyHome } from './forum/logo';
 
 app.initializers.add('ernestdefoe-header-nav', () => {
   /*
@@ -79,6 +79,7 @@ app.initializers.add('ernestdefoe-header-nav', () => {
     // drawn after it does, on every page; writing the same rule twice is a
     // no-op.
     applyLogo();
+    applyHome();
 
     const cfg = current();
     const offered = new Map(readNav().map((n) => [n.key, n]));
