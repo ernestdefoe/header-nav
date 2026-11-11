@@ -129,8 +129,10 @@ export default class MegaMenu extends Component {
     if (openMenu && openMenu !== this) openMenu.close();
     openMenu = this;
 
+    // In the phone drawer the open section is part of the list, and a touch
+    // elsewhere in the drawer is usually the start of a scroll: it stays open.
     this.outside ||= (e) => {
-      if (!this.element.contains(e.target)) {
+      if (!this.element.contains(e.target) && !(this.inline() && e.target.closest?.('.App-drawer'))) {
         this.close();
         m.redraw();
       }
@@ -187,7 +189,7 @@ export default class MegaMenu extends Component {
     const trigger = this.element.getBoundingClientRect();
     const left = Math.min(Math.max(16, trigger.left + trigger.width / 2 - width / 2), window.innerWidth - 16 - width);
 
-    Object.assign(panel.style, { top: `${top}px`, left: `${left}px`, width: `${width}px`, maxHeight: `calc(100vh - ${top + 16}px)` });
+    Object.assign(panel.style, { top: `${top}px`, left: `${left}px`, width: `${width}px`, maxHeight: `${window.innerHeight - top - 16}px` });
 
     const placed = panel.getBoundingClientRect();
     if (Math.abs(placed.top - top) > 1 || Math.abs(placed.left - left) > 1) {

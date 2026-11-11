@@ -695,6 +695,10 @@
   position: relative;
   width: auto;
   max-height: none;
+  // Not a scroll box of its own: in Android Chrome the card's `contain` kept
+  // a swipe that started on it from scrolling the drawer it sits in.
+  overflow: visible;
+  overscroll-behavior: auto;
   margin: 2px 0 8px;
   padding: 12px;
   border-radius: 10px;
@@ -734,7 +738,51 @@
   left: 0;
 }
 
+// The same "…" menu with a big section open can outgrow the screen; it
+// scrolls inside itself below the header instead of running off the bottom.
+.OverflowingList-dropdown .Dropdown-menu:has(.HeaderMega--inline) {
+  max-height: calc(~"100vh - 80px");
+  max-height: calc(~"100dvh - 80px");
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+/*
+ * 🚨 The phone drawer scrolls (Relic System, Discuss d/39984 #6).
+ *
+ * Core pins the drawer to the screen (fixed, top and bottom 0) and never lets
+ * it scroll, so a long menu, or a mega menu opened in it, ran off the bottom
+ * and out of reach. It scrolls inside itself now, ends clear of the iOS home
+ * bar, and the page behind it stays put while it is open. (A bottom tab bar
+ * such as Mobile Tab, z-index 1025, sits under the drawer's 1050: measured,
+ * it needs no room of its own.)
+ */
 @media (max-width: 767.98px) {
+  .App-drawer {
+    max-height: 100vh;
+    max-height: 100dvh;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
+    padding-bottom: calc(~"16px + env(safe-area-inset-bottom, 0px)");
+  }
+
+  body:has(.App.drawerOpen) {
+    overflow: hidden;
+  }
+
+  .drawer-backdrop {
+    touch-action: none;
+  }
+
+  // Core keeps a closed phone dropdown laid out (hidden, slid 70vh down). A
+  // theme that gives the header a backdrop filter (Bespoke) makes the header
+  // the box that sheet is placed in, and the closed sheet then added ~580px
+  // of blank scroll to the drawer. Closed, it takes no room at all.
+  .App-drawer .Dropdown:not(.open) > .Dropdown-menu {
+    display: none;
+  }
+
   .App-drawer .HeaderMega {
     display: block;
   }
