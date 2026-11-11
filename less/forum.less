@@ -712,6 +712,35 @@
     flex: 1 1 100%;
   }
 
+  // The help block stacks (Relic System, Discuss d/39984 #8): in one row
+  // the drawer left its text a word or two a line. Icon and title, then the
+  // text at full width, then the button.
+  .HeaderMega-help {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 6px 10px;
+    align-items: center;
+  }
+
+  .HeaderMega-helpText {
+    display: contents;
+
+    > * {
+      min-width: 0;
+      overflow-wrap: anywhere;
+    }
+
+    > span {
+      grid-column: ~"1 / -1";
+    }
+  }
+
+  .HeaderMega-help > .Button {
+    grid-column: ~"1 / -1";
+    justify-self: start;
+    margin-top: 4px;
+  }
+
   .HeaderMega-col + .HeaderMega-col {
     padding-left: 0;
     border-left: 0;
@@ -790,6 +819,16 @@
   .App-drawer .HeaderMega-caret {
     margin-left: auto;
   }
+
+  // Outranks the stacked layout's grid above.
+  .HeaderMega-panel .HeaderMega-help.HeaderMega-help--noPhone {
+    display: none;
+  }
+}
+
+// The editor's phone preview shows the menu as a phone would.
+.HeaderMega-phone .HeaderMega-panel .HeaderMega-help.HeaderMega-help--noPhone {
+  display: none;
 }
 
 // The editor's own styles (/header-nav) travel with its lazy chunk:

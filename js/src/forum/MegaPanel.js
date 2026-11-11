@@ -347,7 +347,7 @@ export default class MegaPanel extends Component {
     const href = safeHref(h.href);
 
     return (
-      <div className="HeaderMega-help">
+      <div className={classList('HeaderMega-help', h.hidePhone && 'HeaderMega-help--noPhone')}>
         <Icon name="fas fa-life-ring" />
         <div className="HeaderMega-helpText">
           {h.title ? <strong>{h.title}</strong> : null}

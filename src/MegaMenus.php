@@ -84,6 +84,7 @@ class MegaMenus
         'text' => ['text', 200],
         'label' => ['text', 40],
         'href' => ['href'],
+        'hidePhone' => ['bool'],
     ];
 
     private const MENU = [

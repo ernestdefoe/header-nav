@@ -124,7 +124,7 @@ export function fill(raw) {
   menu.aud = audience(r.aud);
   menu.announce = pick(r.announce, ['text', 'href']);
   menu.promo = { ...pick(r.promo, ['title', 'text', 'button', 'href', 'image']), aud: audience(r.promo && r.promo.aud) };
-  menu.help = pick(r.help, ['title', 'text', 'label', 'href']);
+  menu.help = { ...pick(r.help, ['title', 'text', 'label', 'href']), hidePhone: !!(r.help && r.help.hidePhone === true) };
   menu.sections = list(r.sections).slice(0, LIMITS.sections).map(fillSection);
 
   return menu;

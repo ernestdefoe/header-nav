@@ -224,6 +224,7 @@ export default class MegaBuilder extends Component {
             {this.text(menu.help, 'label', t('help_label'), { max: 40 })}
             {this.text(menu.help, 'href', t('address'), { max: 500, check: valid.href, placeholder: t('address_placeholder') })}
           </div>
+          {this.check(menu.help, 'hidePhone', t('help_phone'), true)}
         </fieldset>
       </div>
     );
