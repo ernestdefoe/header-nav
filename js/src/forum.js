@@ -34,11 +34,17 @@ app.initializers.add('ernestdefoe-header-nav', () => {
    * count of 8, so it never re-measured, its widths never matched again, and
    * every later layout returned early. Nothing ever collapsed. When the
    * number of items changes, start the measurement over.
+   *
+   * 🚨 Only a measurement that happened. In the phone drawer the list is not
+   * a row: core shows every item without measuring any, so the widths stay
+   * empty, and restarting there undid core's count on every pass. The two
+   * took turns at about 60 redraws a second on every phone page.
    */
   override(OverflowingList.prototype, 'recalculate', function (original) {
     const count = (this.attrs.items || []).length;
+    const measured = this.itemWidths.length;
 
-    if (this.element?.closest('#header-primary') && this.visibleCount !== null && this.itemWidths.length !== count) {
+    if (this.element?.closest('#header-primary') && this.visibleCount !== null && measured && measured !== count) {
       this.visibleCount = null;
       this.itemWidths = [];
       m.redraw();
